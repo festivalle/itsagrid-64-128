@@ -1,45 +1,33 @@
 /*------------------------------------------------------------------------
   itsagrid varibright 64/128
 
-  Based on code for Trellinome by szymonkaliski  https://github.com/szymonkaliski/diy-monome 
+  Based on code for Trellinome by szymonkaliski  
+  https://github.com/szymonkaliski/diy-monome 
+  
   and the Adafruit UNTZtrument - a Trellis button controller.
   https://github.com/adafruit/Adafruit_UNTZtrument
-  
-  Changing addresses of HOLTEK switch driver chips with jumpers on each pcb
-  
-  see void setup() below for order of i2c addresses for HOLTEK
-
-  A0 sets the lowest bit with a value of 1 
-  A1 sets the middle bit with a value of 2
-  A2 sets the high bit with a value of 4
-  The final address is 0x70 + A2 + A1 + A0. 
-
-  1 -           0x70
-  2 A0          0x71
-  3 A1          0x72
-  4 A0+A1       0x73
-  5 A2          0x74
-  6 A0+A2       0x75
-  7 A1+A2       0x76
-  8 A0+A1+A2    0x77
-  
-  4 or 8 board matrices can be used.  #define NUM_TRELLIS & NUM_BOARDS to the number in use.
-
-  Similar in function to Adafruit UNTZ and HellaUNTZ
-  ----> https://www.adafruit.com/products/1919
-  ----> https://www.adafruit.com/products/1999
 
   Trellis code written by Limor Fried/Ladyada for Adafruit Industries.  
   UNTZ key code by Phil Burgess for Adafruit Industries
   Monome emulation written by Mike Barela for Adafruit Industries
   MIT license, all text above must be included in any redistribution
   
-  Version 0.6  2018-11-04  
+  ** i2c_t3
+  This code uses the i2c_t3 Teensy library 
+  Trellis and TLC59116 libraries have been updated for i2c_t3 use
+  These are included in the "libraries" folder
 
-  This version uses the i2c_t3 Teensy library so the Trellis and TLC59116 libraries 
-  need to be modified to use this as well. I copied these to a new version and added 
-  "_i2c_t3" to the names. 
+  ** i2c addresses
+  See Jumper_addressing.txt for i2c addresses
+  see NUM_BOARDS for order of TLC59116 i2caddresses
+  see setup()  for order of i2c addresses for HOLTEK chip
+
+  ** Number of boards
+  4 or 8 board matrices can be used.  set #define NUM_TRELLIS & NUM_BOARDS to the number being used.
+
+  
   ------------------------------------------------------------------------*/
+  
 // #define DEBUG 1
 
 #include <i2c_t3.h>
@@ -49,8 +37,9 @@
 #define NUM_TRELLIS (8)    // either 4 = 64, 8 = 128
 #define NUM_KEYS    (NUM_TRELLIS * 16)
 
+// SET TLC59116 I2C ADDRESSES HERE
 #define NUM_BOARDS 8
-TLC59116 led_boards[NUM_BOARDS] = {
+TLC59116 led_boards[NUM_BOARDS] = { 
   TLC59116(0x65), TLC59116(0x66), TLC59116(0x62), TLC59116(0x60),
   TLC59116(0x67), TLC59116(0x6E), TLC59116(0x64), TLC59116(0x63)
 };
@@ -204,23 +193,23 @@ void i2xy(uint8_t i, uint8_t *x, uint8_t *y) {
 // --------
 
 void setup() {
-
   Serial.begin(115200);
   //Serial2.begin(115200); // send to serial 2 pins for debug
   
   Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_EXT, 2400000);
-  //Wire.setDefaultTimeout(10000); // 10ms
+  // Wire.setDefaultTimeout(10000); // 10ms
   
    // Initialize HOLTEK - change addresses as needed
+   
     trellis.begin(              // addr is the I2C address of the upper left, upper right, lower left and lower right matrices, respectively
       0x74, 0x75, 0x71, 0x70   // 2x2 arrangement - 64
     #if NUM_TRELLIS > 4
       ,0x76, 0x77, 0x73, 0x72   // 4x2 arrangement - 128
     #endif 
     );
-    // trellis.begin(0x70, 0x71, 0x72, 0x73);
     
-    // initialize pwm
+    // initialize TLC59116
+    
     for (int i = 0; i < NUM_BOARDS; i++)
       led_boards[i].begin();
     
