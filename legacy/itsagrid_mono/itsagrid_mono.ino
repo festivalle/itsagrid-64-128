@@ -435,31 +435,31 @@ void processSerial() {
      readY = readInt();
      //readY << 3; readY >> 3;
 
-      if (readY == 0){  // only loop if y = 0 since we only have 1 or 2 quads with 64/128 buttons
-        z = 0;
-        for (y = 0; y < 8; y++) {
-          for (x = 0; x < 8; x++) {
-            if (z % 2 == 0) {                    
-              intensity = readInt();
-            
-              if ( (intensity >> 4 & 0x0F) > variMonoThresh) {  // even bytes, use upper nybble
-                setLED(readX + x, y, 1);
-              }
-              else {
-                setLED(readX + x, y, 0);
-              }
-            } else {                              
-              if ((intensity & 0x0F) > variMonoThresh ) {      // odd bytes, use lower nybble
-                setLED(readX + x, y, 1);
-              }
-              else {
-                setLED(readX + x, y, 0);
-              }
-            }
-            z++;
-          }
-        }
-      }
+      //if (readY == 0){  // only loop if y = 0 since we only have 1 or 2 quads with 64/128 buttons
+		z = 0;
+		for (y = 0; y < 8; y++) {
+		  for (x = 0; x < 8; x++) {
+			if (z % 2 == 0) {                    
+			  intensity = readInt();
+		
+			  if ( (intensity >> 4 & 0x0F) > variMonoThresh) {  // even bytes, use upper nybble
+				setLED(readX + x, y, 1);
+			  }
+			  else {
+				setLED(readX + x, y, 0);
+			  }
+			} else {                              
+			  if ((intensity & 0x0F) > variMonoThresh ) {      // odd bytes, use lower nybble
+				setLED(readX + x, y, 1);
+			  }
+			  else {
+				setLED(readX + x, y, 0);
+			  }
+			}
+			z++;
+		  }
+		}
+      //}
       break;
 
     case 0x1B:                                // /prefix/led/level/row x y d[8]
