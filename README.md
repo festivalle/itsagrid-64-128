@@ -1,6 +1,10 @@
 # itsagrid 64/128 - a DIY monome compatible grid
 
-A DIY version of [monome](https://monome.org/) 8x8 and 16x8 grid instruments, fully compatible with existing monome patches and software.
+## What is it?
+
+It's a grid.
+
+Specifically a DIY version of [monome](https://monome.org/) grid instruments, fully compatible with existing monome patches and software.
 
 itsagrid is an adaptation of the 
 [Adafruit Trellis board](https://www.adafruit.com/product/1616) with the a rubber button grid from Livid Instruments (no longer made by Livid - but still available via a couple online sources) and using a [Teensy 3.2](https://www.pjrc.com/teensy/) microcontroller. The pcb was redesinged for a larger button spacing, SMD leds, mounting for Teensy, and added a driver chip for variable LED brightness.
@@ -8,7 +12,7 @@ itsagrid is an adaptation of the
 
 ## itsagrid varibright
 
-itsagrid software started as a fork of the Trellinome portion of the [DIY monome project](https://github.com/szymonkaliski/diy-monome) by szymonkaliski. The hardware has now been extended to use a PWM chip to obtain variable brightness of the LEDs 
+itsagrid software started as a fork of the Trellinome portion of the [DIY monome project](https://github.com/szymonkaliski/diy-monome) by szymonkaliski. The hardware has now been extended to use a PWM chip to get variable brightness of the LEDs 
 
 As with the Trellis boards, adjacent pcbs are connected via the SDA, SCL, GND, 5V and INT pads on each board  ([learn.adafruit.com/adafruit-trellis-diy-open-source-led-keypad](https://learn.adafruit.com/adafruit-trellis-diy-open-source-led-keypad)). Four pcbs are used for 64 grid, eight for a 128 grid. Each pcb as a set of jumpers that need to be configured for unique addressing of the i2c driver chips (buttons and leds).
 
@@ -33,7 +37,7 @@ Note - there is a serialosc patch szymonkaliski included with his build which ma
 
 ## Case / Panel
 
-Prototype case is laser cut acrylic top and bottom panels and some spacers. Laser files will be posted here.
+Prototype case is laser cut acrylic top and bottom panels and some spacers. Laser files will be posted with other hardware details later.
 
 ## References 
 
