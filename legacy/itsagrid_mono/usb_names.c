@@ -1,8 +1,8 @@
 #include "usb_names.h"
 
 //#define PRODUCT_NAME      {'t','e','e','n','s','y','g','r','i','d'}
-#define PRODUCT_NAME      {'m','o','n','o','m','e','g','r','i','d'}
-#define PRODUCT_NAME_LEN   10
+#define PRODUCT_NAME      {'m','o','n','o','m','e'}
+#define PRODUCT_NAME_LEN   6
 #define MANUFACTURER_NAME  {'m','o','n','o','m','e'}
 #define MANUFACTURER_NAME_LEN 6
 #define SERIAL_NUM  {'m','4','6','7','6','0','0','0'}

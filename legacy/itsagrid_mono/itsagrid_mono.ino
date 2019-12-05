@@ -66,7 +66,7 @@ Adafruit_TrellisSet trellis = Adafruit_TrellisSet(
 );
 
 // Monome ID
-String deviceID  = "monome";
+String deviceID  = "untz-monome";
 String serialNum = "m1000010";
 
 const uint8_t gridNumber = 0x01;            // This code is for Grid #2 (change for > 1 grid)
@@ -207,16 +207,18 @@ void setup() {
 
 	Serial.begin(115200);
    // Initialize trellis boards - change addresses as needed
+ 
     trellis.begin(              // addr is the I2C address of the upper left, upper right, lower left and lower right matrices, respectively
       0x70, 0x71, 0x72, 0x73   // 2x2 arrangement - 64
     #if NUM_TRELLIS > 4
       ,0x74, 0x75, 0x76, 0x77   // 4x2 arrangement - 128
     #endif 
     );
-    // trellis.begin(0x70, 0x71, 0x72, 0x73);
+//    trellis.begin(0x70, 0x71, 0x72, 0x73);
 
-    //setAllLEDs(1); // blink leds on at start
-    delay(200);
+    setAllLEDs(1); // blink leds on at start
+    delay(300);
+    setAllLEDs(0);
 }
 
 uint8_t readInt() {
@@ -249,8 +251,8 @@ void processSerial() {
   switch (identifierSent) {
     case 0x00:									// device information
       writeInt((uint8_t)0x00);                // system/query response 0x00 -> 0x00
-      writeInt((uint8_t)0x01);                // grids
-      writeInt((uint8_t)0x01);                // one grid
+      writeInt((uint8_t)0x02);                // id, 2 = key-grid
+      writeInt((uint8_t)numGrids);            // one grid is 64 buttons
       break;
 
     case 0x01:									// device ID string
@@ -260,7 +262,7 @@ void processSerial() {
           Serial.print(deviceID[i]);
         }
         else {
-          Serial.print('\0');
+          Serial.print(0x00);
         }
       }
       break;
@@ -273,9 +275,9 @@ void processSerial() {
 
     case 0x03:
       writeInt((uint8_t)0x02);                // system / request grid offsets
-      // writeInt(0);                         // n grid?
-      writeInt((uint8_t)0x00);                // x offset - could be 0 or 8 
-      writeInt((uint8_t)0x00);                // y offset
+      writeInt((uint8_t)0x01);                // n grid number ?
+      writeInt(8);                // x offset - could be 0 or 8 
+      writeInt(0);                // y offset
       break;
 
     case 0x04:
@@ -306,7 +308,7 @@ void processSerial() {
 
     case 0x0F:
       writeInt((uint8_t)0x0F);                // send serial number
-      Serial.print(serialNum);
+      Serial.print(serialNum);                // does this do anything?
       break;
       
 	// 0x10-0x1F are for an LED Grid Control.  All bytes incoming, no responses back
@@ -436,6 +438,7 @@ void processSerial() {
      //readY << 3; readY >> 3;
 
       //if (readY == 0){  // only loop if y = 0 since we only have 1 or 2 quads with 64/128 buttons
+      // don't limit loop here since it needs to consume data from all 4 quads
 		z = 0;
 		for (y = 0; y < 8; y++) {
 		  for (x = 0; x < 8; x++) {

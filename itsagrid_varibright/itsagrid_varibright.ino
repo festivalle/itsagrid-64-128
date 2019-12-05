@@ -64,7 +64,7 @@ Adafruit_TrellisSet trellis = Adafruit_TrellisSet(
   #endif
 );
 
-String deviceID  = "monome";
+String deviceID  = "teensy-monome 128";
 String serialNum = "m1000010"; // this # does not get used -  serial number from usb_names is picked up instead
 
 const uint8_t gridNumber = 0x01;            // ?????
@@ -264,7 +264,7 @@ void processSerial() {
           Serial.write(deviceID[i]);          
         }
         else {
-          Serial.write(' ');           
+          Serial.write(0x00);           
         }
       }
       break;
